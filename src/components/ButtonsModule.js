@@ -28,9 +28,9 @@ const ButtonsModule = ({ onAddTask }) => {
 
   return (
     <div className="flex items-center justify-between mb-4 mx-4 sm:mx-8 lg:mx-16">
-      <span className="text-2xl font-bold">Desktop & Mobile Application</span>
+      <span className="text-lg sm:text-2xl font-bold">Desktop & Mobile Application</span>
       <button
-        className="bg-green-500 text-white px-8 py-3 rounded-md shadow-md hover:bg-green-600 w-3/4 sm:w-auto text-lg"
+        className="bg-green-500 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-md shadow-md hover:bg-green-600 w-full sm:w-auto text-base sm:text-lg"
         onClick={openModal}
       >
         Create Task

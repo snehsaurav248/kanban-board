@@ -5,42 +5,29 @@ import ButtonsModule from './ButtonsModule';
 
 const KanbanBoard = () => {
   const [tasks, setTasks] = useState({
-    TODO: [],
-    'IN PROGRESS': [],
-    COMPLETED: [],
+    todo: [],
+    inProgress: [],
+    completed: [],
   });
 
-  const addTask = (task) => {
+  const addTask = (newTask) => {
     setTasks((prevTasks) => ({
       ...prevTasks,
-      [task.status]: [...prevTasks[task.status], task],
+      todo: [...prevTasks.todo, newTask],
     }));
   };
 
-  const moveTask = (task, fromColumn, toColumn) => {
-    setTasks((prevTasks) => {
-      const updatedFromColumn = prevTasks[fromColumn].filter((t) => t !== task);
-      const updatedToColumn = [...prevTasks[toColumn], task];
-      return {
-        ...prevTasks,
-        [fromColumn]: updatedFromColumn,
-        [toColumn]: updatedToColumn,
-      };
-    });
-  };
-
   return (
-    <div className="container mx-auto p-5">
-      <h1 className="text-3xl font-bold text-center mb-10">Kanban Board</h1>
-      
+    <div className="container mx-auto p-4 sm:p-8 lg:p-16">
+
       {/* Buttons Module */}
       <ButtonsModule onAddTask={addTask} />
-      
+
       {/* Kanban Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mx-4 sm:mx-8 lg:mx-16">
-        <Column title="TODO" tasks={tasks.TODO} moveTask={moveTask} />
-        <Column title="IN PROGRESS" tasks={tasks['IN PROGRESS']} moveTask={moveTask} />
-        <Column title="COMPLETED" tasks={tasks.COMPLETED} moveTask={moveTask} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Column title="TODO" tasks={tasks.todo} />
+        <Column title="IN PROGRESS" tasks={tasks.inProgress} />
+        <Column title="COMPLETED" tasks={tasks.completed} />
       </div>
     </div>
   );

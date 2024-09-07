@@ -4,68 +4,88 @@ import React from 'react';
 const Modal = ({ isOpen, onClose, onSave, newTask, setNewTask }) => {
   if (!isOpen) return null;
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewTask((prevTask) => ({
+      ...prevTask,
+      [name]: value,
+    }));
+  };
+
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Create New Task</h2>
-        <form>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Title</label>
+    <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white w-11/12 sm:w-96 p-6 rounded-lg shadow-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Create New Task</h2>
+          <button className="text-xl font-bold" onClick={onClose}>
+            &times;
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium">Title</label>
             <input
               type="text"
+              name="title"
               value={newTask.title}
-              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-              className="border border-gray-300 p-2 w-full rounded"
-              placeholder="Task Title"
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Description</label>
+          <div>
+            <label className="block text-sm font-medium">Description</label>
             <textarea
+              name="description"
               value={newTask.description}
-              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-              className="border border-gray-300 p-2 w-full rounded"
-              placeholder="Task Description"
-            />
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded"
+            ></textarea>
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Select Date</label>
+          <div>
+            <label className="block text-sm font-medium">Select Date</label>
             <input
               type="date"
+              name="date"
               value={newTask.date}
-              onChange={(e) => setNewTask({ ...newTask, date: e.target.value })}
-              className="border border-gray-300 p-2 w-full rounded"
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Status</label>
+          <div>
+            <label className="block text-sm font-medium">Status</label>
             <select
+              name="status"
               value={newTask.status}
-              onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
-              className="border border-gray-300 p-2 w-full rounded"
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded"
             >
               <option value="TODO">TODO</option>
               <option value="IN PROGRESS">IN PROGRESS</option>
               <option value="COMPLETED">COMPLETED</option>
             </select>
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Priority</label>
+          <div>
+            <label className="block text-sm font-medium">Priority</label>
             <select
+              name="priority"
               value={newTask.priority}
-              onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-              className="border border-gray-300 p-2 w-full rounded"
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-2 rounded"
             >
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
             </select>
           </div>
-          <div className="flex justify-end">
-            <button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
-            <button type="button" onClick={onSave} className="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
-          </div>
-        </form>
+        </div>
+        <div className="mt-4 flex justify-end">
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            onClick={onSave}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
