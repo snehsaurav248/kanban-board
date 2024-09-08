@@ -1,96 +1,98 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-const Column = ({ title, tasks, onStatusChange }) => {
+const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
 
-  // Handle changing the status of a task
-  const handleStatusChange = (taskId, newStatus) => {
-    if (typeof onStatusChange === 'function') {
-      onStatusChange(taskId, newStatus);
-      setDropdownOpen(null); // Close dropdown after selection
-    } else {
-      console.error('onStatusChange is not a function');
-    }
-  };
-
-  // Toggle the dropdown menu for a specific task
+  // Toggle the dropdown menu
   const toggleDropdown = (taskId) => {
     setDropdownOpen(dropdownOpen === taskId ? null : taskId);
   };
 
-  // Get priority label classes
-  const getPriorityLabelClass = (priority) => {
+  // Handle changing the status of a task
+  const handleStatusChange = (taskId, newStatus) => {
+    onStatusChange(taskId, newStatus);
+    setDropdownOpen(null); // Close dropdown after selection
+  };
+
+  // Determine background color based on priority
+  const getPriorityColor = (priority) => {
     switch (priority) {
       case 'High':
-        return 'bg-red-500 text-white';
+        return 'bg-red-500 text-white'; // Red background for High priority
       case 'Medium':
-        return 'bg-yellow-500 text-black';
+        return 'bg-yellow-500 text-black'; // Yellow background for Medium priority
       case 'Low':
-        return 'bg-green-500 text-white';
+        return 'bg-green-500 text-white'; // Green background for Low priority
       default:
-        return '';
+        return 'bg-gray-300 text-black'; // Default background
     }
   };
 
   return (
-    <div className="w-full p-4 border border-[#E3E3E3] shadow-lg bg-white">
-      <h2 className={`text-xl font-semibold ${title === 'TODO' ? 'bg-purple-600 text-white' : title === 'IN PROGRESS' ? 'bg-yellow-500 text-black' : 'bg-green-600 text-white'} p-2 rounded mb-4`}>
-        {title}
-      </h2>
-      <div className="space-y-4">
-        {tasks.length === 0 ? (
-          <p className="text-center text-gray-500">No tasks available</p>
-        ) : (
-          tasks.map((task) => (
-            <div key={task.id} className="relative bg-[#F4F4F4] p-4 rounded border border-[#E3E3E3] shadow-sm">
-              <div className="flex justify-between items-start">
-                {/* Priority label */}
-                <span className={`px-2 py-1 rounded text-sm font-semibold ${getPriorityLabelClass(task.priority)}`}>
-                  {task.priority}
-                </span>
+    <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">{title}</h2>
+      {tasks.map((task) => (
+        <div key={task.id} className="relative p-4 mb-4 rounded-md shadow-md bg-white">
+          {/* Priority Display */}
+          <div className={`absolute top-2 left-2 text-xs ${getPriorityColor(task.priority)} px-2 py-1 rounded-md`}>
+            {task.priority}
+          </div>
 
-                {/* Dropdown arrow for status change */}
-                <button
-                  onClick={() => toggleDropdown(task.id)}
-                  className="text-gray-600 hover:text-gray-800 focus:outline-none"
+          {/* Action Buttons */}
+          <div className="absolute top-2 right-2 flex items-center space-x-2">
+            {/* Edit Button */}
+            <button
+              className="text-blue-500 hover:text-blue-700"
+              onClick={() => onEditTask(task)}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
+
+            {/* Delete Button */}
+            <button
+              className="text-red-500 hover:text-red-700"
+              onClick={() => onDeleteTask(task.id)}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+
+            {/* Dropdown Arrow */}
+            <button
+              onClick={() => toggleDropdown(task.id)}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+          </div>
+
+          {/* Status Dropdown Menu */}
+          {dropdownOpen === task.id && (
+            <div className="absolute top-10 right-2 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <div className="py-1 px-4">
+                <p className="text-base font-bold mb-2">Change Status</p>
+                <select
+                  value={task.status}
+                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                  className="w-full border border-gray-300 p-2 rounded-md focus:outline-none"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </button>
+                  <option value="TODO">TODO</option>
+                  <option value="IN PROGRESS">IN PROGRESS</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                </select>
               </div>
-
-              {/* Task content */}
-              <div className="mt-2">
-                <p className="text-lg font-semibold">{task.title}</p>
-                <p className="text-sm text-gray-700">{task.description}</p>
-                <div className="flex items-center text-sm text-gray-500">
-                  <i className="fas fa-calendar-alt mr-2"></i>
-                  <p>{task.date}</p>
-                </div>
-              </div>
-
-              {/* Dropdown for changing task status */}
-              {dropdownOpen === task.id && (
-                <div className="absolute top-0 right-0 mt-8 w-48 bg-gray-100 border border-gray-300 rounded-md shadow-lg z-10">
-                  <div className="py-2 px-4">
-                    <p className="text-base font-bold mb-2 text-gray-700">Change Status</p>
-                    <select
-                      value={task.status}
-                      onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                      className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      <option value="TODO">TODO</option>
-                      <option value="IN PROGRESS">IN PROGRESS</option>
-                      <option value="COMPLETED">COMPLETED</option>
-                    </select>
-                  </div>
-                </div>
-              )}
             </div>
-          ))
-        )}
-      </div>
+          )}
+
+          {/* Task Content */}
+          <h3 className="text-lg font-bold mt-8">
+            {task.title}
+          </h3>
+          <p className="text-gray-600">{task.description}</p>
+          <p className="text-sm text-gray-400">Due: {task.date}</p>
+        </div>
+      ))}
     </div>
   );
 };

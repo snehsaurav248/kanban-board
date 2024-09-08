@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const Modal = ({ isOpen, onClose, onCreate, newTask, setNewTask, editing }) => {
+const Modal = ({ isOpen, onClose, onCreate, onUpdate, newTask, setNewTask, editing }) => {
   useEffect(() => {
     if (editing && newTask) {
       setNewTask({ ...newTask });
@@ -17,12 +17,21 @@ const Modal = ({ isOpen, onClose, onCreate, newTask, setNewTask, editing }) => {
     }));
   };
 
+  const handleSubmit = () => {
+    if (editing && typeof onUpdate === 'function') {
+      onUpdate(newTask);
+    } else if (!editing && typeof onCreate === 'function') {
+      onCreate(newTask);
+    }
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white w-11/12 sm:w-96 p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{editing ? 'Edit Task' : 'Create New Task'}</h2>
-          <button className="text-xl font-bold" onClick={onClose}>
+          <button className="text-xl font-bold" onClick={onClose} aria-label="Close">
             &times;
           </button>
         </div>
@@ -82,24 +91,24 @@ const Modal = ({ isOpen, onClose, onCreate, newTask, setNewTask, editing }) => {
               className="w-full border border-gray-300 p-2 rounded"
               required
             >
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
               <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
             </select>
           </div>
         </div>
-        <div className="mt-4 flex justify-end space-x-4">
+        <div className="flex justify-end gap-4 mt-4">
           <button
-            className="bg-white-500 border-purple-950 text-purple-700 px-4 py-2 rounded-md hover:bg-white"
+            className="bg-white-500 text-black py-2 px-4 rounded hover:bg-purple-600"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
-            className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600"
-            onClick={onCreate}
+            className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+            onClick={handleSubmit}
           >
-            {editing ? 'Save Changes' : 'Create'}
+            {editing ? 'Update Task' : 'Create'}
           </button>
         </div>
       </div>

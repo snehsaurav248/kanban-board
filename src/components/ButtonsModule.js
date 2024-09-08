@@ -11,8 +11,13 @@ const ButtonsModule = ({ onAddTask }) => {
     priority: 'Medium',
   });
 
+  // Open modal for task creation
   const openModal = () => setIsModalOpen(true);
+
+  // Close modal
   const closeModal = () => setIsModalOpen(false);
+
+  // Handle task save
   const handleSave = () => {
     if (newTask.title && newTask.status) {
       onAddTask(newTask);
@@ -39,6 +44,7 @@ const ButtonsModule = ({ onAddTask }) => {
         Create Task
       </button>
 
+      {/* Modal for task creation */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
