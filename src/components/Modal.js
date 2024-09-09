@@ -91,9 +91,9 @@ const Modal = ({ isOpen, onClose, onCreate, onUpdate, newTask, setNewTask, editi
               className="w-full border border-gray-300 p-2 rounded"
               required
             >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
               <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
             </select>
           </div>
         </div>
