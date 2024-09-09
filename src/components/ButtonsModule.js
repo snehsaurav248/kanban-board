@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import Modal from './Modal';
+import React, { useState } from 'react'; 
+import Modal from './Modal'; // Import the Modal component
 
 const ButtonsModule = ({ onAddTask }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
     date: '',
     status: 'TODO',
     priority: 'Medium',
-  });
+  }); // State to manage the new task's data
 
   // Open modal for task creation
   const openModal = () => setIsModalOpen(true);
@@ -19,18 +19,18 @@ const ButtonsModule = ({ onAddTask }) => {
 
   // Handle task save
   const handleSave = () => {
-    if (newTask.title && newTask.status) {
-      onAddTask(newTask);
+    if (newTask.title && newTask.status) { // Check if required fields are filled
+      onAddTask(newTask); // Pass the new task to the parent component
       setNewTask({
         title: '',
         description: '',
         date: '',
         status: 'TODO',
         priority: 'Medium',
-      });
-      closeModal();
+      }); // Reset newTask state
+      closeModal(); // Close the modal
     } else {
-      alert('Please fill in all required fields.');
+      alert('Please fill in all required fields.'); // Alert if fields are missing
     }
   };
 
@@ -39,7 +39,7 @@ const ButtonsModule = ({ onAddTask }) => {
       <span className="text-lg sm:text-2xl font-bold">Desktop & Mobile Application</span>
       <button
         className="bg-purple-500 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-md shadow-md hover:bg-purple-600 w-full sm:w-auto text-base sm:text-lg"
-        onClick={openModal}
+        onClick={openModal} // Open the modal when button is clicked
       >
         Create Task
       </button>
@@ -47,10 +47,10 @@ const ButtonsModule = ({ onAddTask }) => {
       {/* Modal for task creation */}
       <Modal
         isOpen={isModalOpen}
-        onClose={closeModal}
-        onCreate={handleSave}
-        newTask={newTask}
-        setNewTask={setNewTask}
+        onClose={closeModal} // Function to close the modal
+        onCreate={handleSave} // Function to save the new task
+        newTask={newTask} // Pass current newTask state to the modal
+        setNewTask={setNewTask} // Function to update newTask state from the modal
       />
     </div>
   );
