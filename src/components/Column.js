@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import { faEdit, faTrash, faChevronDown, faCalendar } from '@fortawesome/free-solid-svg-icons'; // Import icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null); // State to manage which task's dropdown is open
