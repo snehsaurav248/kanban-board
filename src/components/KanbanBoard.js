@@ -50,7 +50,7 @@ const KanbanBoard = () => {
   };
 
   return (
-    <div className="p-6 pt-32"> {/* Adjusted pt-32 to push content further down */}
+    <div className="px-9 sm:px-18 lg:px-24 py-4 pt-32"> {/* Adjusted pt-32 to push content further down */}
       {/* Logo Component */}
       <Logo />
 
