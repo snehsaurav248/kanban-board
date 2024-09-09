@@ -5,6 +5,7 @@ import Column from './Column';
 import Modal from './Modal';
 import ButtonsModule from './ButtonsModule';
 import Logo from './Logo'; // Import Logo component
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 const KanbanBoard = () => {
   const [tasks, setTasks] = useState([]);
@@ -49,54 +50,110 @@ const KanbanBoard = () => {
     setModalOpen(true);
   };
 
+  // Handle drag and drop
+  const handleOnDragEnd = async (result) => {
+    const { destination, source, draggableId } = result;
+
+    // If no destination or drop is outside droppable area
+    if (!destination) return;
+
+    // No changes if the item is dropped in the same place
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) return;
+
+    // Update task status
+    const updatedTask = tasks.find(task => task.id === draggableId);
+    if (updatedTask) {
+      updatedTask.status = destination.droppableId;
+      await handleUpdate(updatedTask);
+    }
+  };
+
   return (
-    <div className="px-9 sm:px-18 lg:px-24 py-4 pt-32"> {/* Adjusted pt-32 to push content further down */}
-      {/* Logo Component */}
-      <Logo />
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div className="px-9 sm:px-18 lg:px-24 py-4 pt-32"> {/* Adjusted pt-32 to push content further down */}
+        {/* Logo Component */}
+        <Logo />
 
-      {/* Button Module Component */}
-      <ButtonsModule onAddTask={handleCreate} />
+        {/* Button Module Component */}
+        <ButtonsModule onAddTask={handleCreate} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-        {/* TODO Column */}
-        <Column
-          title="TODO"
-          tasks={tasks.filter((task) => task.status === 'TODO')}
-          onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
-          onEditTask={handleEdit}
-          onDeleteTask={handleDelete}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          {/* TODO Column */}
+          <Droppable droppableId="TODO">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                <Column
+                  title="TODO"
+                  tasks={tasks.filter((task) => task.status === 'TODO')}
+                  droppableId="TODO"
+                  onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
+                  onEditTask={handleEdit}
+                  onDeleteTask={handleDelete}
+                />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
 
-        {/* IN PROGRESS Column */}
-        <Column
-          title="IN PROGRESS"
-          tasks={tasks.filter((task) => task.status === 'IN PROGRESS')}
-          onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
-          onEditTask={handleEdit}
-          onDeleteTask={handleDelete}
-        />
+          {/* IN PROGRESS Column */}
+          <Droppable droppableId="IN PROGRESS">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                <Column
+                  title="IN PROGRESS"
+                  tasks={tasks.filter((task) => task.status === 'IN PROGRESS')}
+                  droppableId="IN PROGRESS"
+                  onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
+                  onEditTask={handleEdit}
+                  onDeleteTask={handleDelete}
+                />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
 
-        {/* COMPLETED Column */}
-        <Column
-          title="COMPLETED"
-          tasks={tasks.filter((task) => task.status === 'COMPLETED')}
-          onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
-          onEditTask={handleEdit}
-          onDeleteTask={handleDelete}
+          {/* COMPLETED Column */}
+          <Droppable droppableId="COMPLETED">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                <Column
+                  title="COMPLETED"
+                  tasks={tasks.filter((task) => task.status === 'COMPLETED')}
+                  droppableId="COMPLETED"
+                  onStatusChange={(taskId, newStatus) => handleUpdate({ id: taskId, status: newStatus })}
+                  onEditTask={handleEdit}
+                  onDeleteTask={handleDelete}
+                />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+
+        {/* Modal for task editing */}
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          onCreate={handleCreate}
+          onUpdate={handleUpdate}
+          newTask={newTask}
+          setNewTask={setNewTask}
+          editing={editing}
         />
       </div>
-
-      {/* Modal for task editing */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onCreate={handleCreate}
-        onUpdate={handleUpdate}
-        newTask={newTask}
-        setNewTask={setNewTask}
-        editing={editing}
-      />
-    </div>
+    </DragDropContext>
   );
 };
 
