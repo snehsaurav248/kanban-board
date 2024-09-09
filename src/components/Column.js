@@ -1,6 +1,5 @@
 import React, { useState } from 'react'; 
-import { faEdit, faTrash, faChevronDown, faCalendar } from '@fortawesome/free-solid-svg-icons'; // Import icons
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { EditOutlined, DeleteOutlined, DownOutlined, CalendarOutlined } from '@ant-design/icons'; // Import Ant Design icons
 
 const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null); // State to manage which task's dropdown is open
@@ -66,7 +65,7 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
               className="text-blue-500 hover:text-blue-700"
               onClick={() => onEditTask(task)} // Trigger edit action
             >
-              <FontAwesomeIcon icon={faEdit} /> {/* Edit icon */}
+              <EditOutlined /> {/* Edit icon */}
             </button>
 
             {/* Delete Button */}
@@ -74,7 +73,7 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
               className="text-red-500 hover:text-red-700"
               onClick={() => onDeleteTask(task.id)} // Trigger delete action
             >
-              <FontAwesomeIcon icon={faTrash} /> {/* Delete icon */}
+              <DeleteOutlined /> {/* Delete icon */}
             </button>
 
             {/* Dropdown Arrow */}
@@ -82,7 +81,7 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
               onClick={() => toggleDropdown(task.id)} // Toggle dropdown menu for the task
               className="text-gray-600 hover:text-gray-800"
             >
-              <FontAwesomeIcon icon={faChevronDown} /> {/* Dropdown arrow icon */}
+              <DownOutlined /> {/* Dropdown arrow icon */}
             </button>
           </div>
 
@@ -110,7 +109,7 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
           </h3>
           <p className="text-gray-600">{task.description}</p> {/* Task description */}
           <div className="flex items-center text-sm text-gray-400 mt-2">
-            <FontAwesomeIcon icon={faCalendar} className="mr-2" /> {/* Calendar icon */}
+            <CalendarOutlined className="mr-2" /> {/* Calendar icon */}
             {task.date} {/* Task date */}
           </div>
         </div>
