@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faChevronDown, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -30,9 +30,25 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
     }
   };
 
+  // Determine heading background color based on the column title
+  const getHeadingColor = (title) => {
+    switch (title) {
+      case 'TODO':
+        return 'bg-purple-600 text-white'; // Purple background for TODO
+      case 'IN PROGRESS':
+        return 'bg-yellow-400 text-white'; // Yellow background for IN PROGRESS
+      case 'COMPLETED':
+        return 'bg-green-600 text-white'; // Green background for COMPLETED
+      default:
+        return 'bg-white'; // Default background
+    }
+  };
+
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">{title}</h2>
+      <h2 className={`text-xl font-bold mb-4 p-2 rounded-md ${getHeadingColor(title)} text-center`}>
+        {title}
+      </h2>
       {tasks.map((task) => (
         <div key={task.id} className="relative p-4 mb-4 rounded-md shadow-md bg-white">
           {/* Priority Display */}
@@ -90,7 +106,10 @@ const Column = ({ title, tasks, onStatusChange, onEditTask, onDeleteTask }) => {
             {task.title}
           </h3>
           <p className="text-gray-600">{task.description}</p>
-          <p className="text-sm text-gray-400">Due: {task.date}</p>
+          <div className="flex items-center text-sm text-gray-400 mt-2">
+            <FontAwesomeIcon icon={faCalendar} className="mr-2" />
+            {task.date}
+          </div>
         </div>
       ))}
     </div>
